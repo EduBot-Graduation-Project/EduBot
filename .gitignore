@@ -1,0 +1,35 @@
+# .NET Build & Runtime
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.cache
+*.dll
+*.exe
+*.pdb
+
+# IDEs & Editors (Rider, VS Code, Visual Studio)
+.idea/
+.vscode/
+.vs/
+
+# Secrets & Environment Variables
+.env
+.env.*
+*.secret
+appsettings.Production.json
+
+# Python / AI
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# OS & Logs
+.DS_Store
+Thumbs.db
+*.log

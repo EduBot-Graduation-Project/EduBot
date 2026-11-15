@@ -1,0 +1,26 @@
+services:
+  postgres:
+    container_name: edubot-pg
+    image: postgres:18
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - edubot-pg-volume:/var/lib/postgresql
+    restart: unless-stopped
+
+  redis:
+    container_name: edubot-redis
+    image: redis:alpine
+    command: redis-server --requirepass redis --appendonly yes
+    ports:
+      - 6379:6379
+    volumes:
+      - edubot-redis-volume:/data
+    restart: unless-stopped
+
+volumes:
+  edubot-pg-volume:
+  edubot-redis-volume:
