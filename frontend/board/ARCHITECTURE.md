@@ -1,7 +1,7 @@
 # Smart Board Web App - Architecture
 
 ## Stack
-- Frontend: React + Vite + JavaScript (ES Modules, No TypeScript)
+- Frontend: React + Vite + JavaScript 
 - Architecture: Layered + Modular
 - Principles: SOLID
 - State: Zustand
