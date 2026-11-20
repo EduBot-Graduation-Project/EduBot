@@ -2,6 +2,7 @@ using System.Text;
 using EduBot.Api.Infrastructure;
 using EduBot.Api.Modules.Identity.Entities;
 using EduBot.Api.Modules.Identity.Services;
+using EduBot.Api.Shared.Exceptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,8 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Pro
 
 // Services
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 // Database Context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -82,6 +85,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+app.UseExceptionHandler();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
