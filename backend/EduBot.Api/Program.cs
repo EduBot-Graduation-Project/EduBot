@@ -19,6 +19,7 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Pro
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
+builder.Services.ConfigureOptions<ConfigureApiBehaviorOptions>();
 
 // Database Context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
