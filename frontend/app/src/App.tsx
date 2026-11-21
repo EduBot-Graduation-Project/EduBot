@@ -1,11 +1,8 @@
-function App() {
-  return (
-    <div>
-      <h1 className="text-3xl">
-        welcome to EduBot
-      </h1>
-    </div>
-  );
-}
+import { RouterProvider } from "react-router";
+import { router } from "./routes";
 
-export default App;
+
+
+export default function App() {
+  return <RouterProvider router={router} />;
+}
