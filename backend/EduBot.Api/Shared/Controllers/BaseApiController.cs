@@ -8,14 +8,16 @@ public abstract class BaseApiController : ControllerBase
 {
     protected ActionResult<ApiResponse<T>> HandleResult<T>(Result<T> result)
     {
-        // If It Successed
+        // If It Successes
         if (result.IsSuccess)
         {
             var apiResponse = new ApiResponse<T>(true, result.Message, result.Data);
             return Ok(apiResponse);
         }
+
         // Else It Failed
-        var errorResponse = new ApiResponse(false, result.Message, [result.Message]);
+        var errorResponse = new ApiResponse(false, result.Message,
+            new Dictionary<string, string[]> { ["general"] = [result.Message ?? ""] });
 
         switch (result.ErrorType)
         {
@@ -34,8 +36,10 @@ public abstract class BaseApiController : ControllerBase
             var apiResponse = new ApiResponse(true, result.Message);
             return Ok(apiResponse);
         }
+
         // Else It Failed
-        var errorResponse = new ApiResponse(false, result.Message, [result.Message]);
+        var errorResponse = new ApiResponse(false, result.Message,
+            new Dictionary<string, string[]> { ["general"] = [result.Message ?? ""] });
 
         switch (result.ErrorType)
         {

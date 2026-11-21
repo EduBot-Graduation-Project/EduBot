@@ -2,7 +2,9 @@ using System.Text;
 using EduBot.Api.Infrastructure;
 using EduBot.Api.Modules.Identity.Entities;
 using EduBot.Api.Modules.Identity.Services;
+using EduBot.Api.Shared.Behaviors;
 using EduBot.Api.Shared.Exceptions;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +15,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 builder.Services.AddControllers();
-builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly));
+builder.Services.AddMediatR(cfg =>
+    {
+        cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly
+        );
+        cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+    }
+);
+
+// Validation
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 // Services
 builder.Services.AddScoped<TokenService>();
@@ -54,7 +65,7 @@ builder
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["JWT:SecretKey"]!)
-            ),
+            )
         };
     });
 
