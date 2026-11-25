@@ -10,4 +10,7 @@ public class Session
 
     // Relation With Lesson
     public Guid LessonId { get; set; }
+
+    // Relation With Classroom
+    public Guid ClassroomId { get; set; }
 }

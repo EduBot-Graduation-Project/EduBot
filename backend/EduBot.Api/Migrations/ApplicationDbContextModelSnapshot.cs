@@ -28,15 +28,27 @@ namespace EduBot.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("FileUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("LessonStatus")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("OrderIndex")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("SubjectId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SubjectId");
 
                     b.ToTable("Lessons");
                 });
@@ -51,7 +63,18 @@ namespace EduBot.Api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("LessonId")
+                    b.Property<string>("ChunkType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("EmotionType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("LessonPageId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("OrderIndex")
@@ -63,9 +86,49 @@ namespace EduBot.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LessonId");
+                    b.HasIndex("LessonPageId");
 
                     b.ToTable("LessonChunks");
+                });
+
+            modelBuilder.Entity("EduBot.Api.Modules.Curriculum.Entities.LessonPage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("LessonId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("PageNumber")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LessonId");
+
+                    b.ToTable("LessonPages");
+                });
+
+            modelBuilder.Entity("EduBot.Api.Modules.Curriculum.Entities.Subject", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Subjects");
                 });
 
             modelBuilder.Entity("EduBot.Api.Modules.Identity.Entities.ApplicationUser", b =>
@@ -133,10 +196,58 @@ namespace EduBot.Api.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("EduBot.Api.Modules.School.Entities.Classroom", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("GradeLevel")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Classrooms");
+                });
+
+            modelBuilder.Entity("EduBot.Api.Modules.School.Entities.Student", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ClassroomId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("StudentCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassroomId");
+
+                    b.HasIndex("StudentCode")
+                        .IsUnique();
+
+                    b.ToTable("Students");
+                });
+
             modelBuilder.Entity("EduBot.Api.Modules.Sessions.Entities.Session", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ClassroomId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("CurrentChunkOrder")
@@ -150,6 +261,8 @@ namespace EduBot.Api.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ClassroomId");
 
                     b.HasIndex("LessonId");
 
@@ -286,10 +399,32 @@ namespace EduBot.Api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("EduBot.Api.Modules.Curriculum.Entities.Lesson", b =>
+                {
+                    b.HasOne("EduBot.Api.Modules.Curriculum.Entities.Subject", "Subject")
+                        .WithMany("Lessons")
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Subject");
+                });
+
             modelBuilder.Entity("EduBot.Api.Modules.Curriculum.Entities.LessonChunk", b =>
                 {
+                    b.HasOne("EduBot.Api.Modules.Curriculum.Entities.LessonPage", "LessonPage")
+                        .WithMany("LessonChunks")
+                        .HasForeignKey("LessonPageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LessonPage");
+                });
+
+            modelBuilder.Entity("EduBot.Api.Modules.Curriculum.Entities.LessonPage", b =>
+                {
                     b.HasOne("EduBot.Api.Modules.Curriculum.Entities.Lesson", "Lesson")
-                        .WithMany("Chunks")
+                        .WithMany("LessonPages")
                         .HasForeignKey("LessonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -297,12 +432,29 @@ namespace EduBot.Api.Migrations
                     b.Navigation("Lesson");
                 });
 
+            modelBuilder.Entity("EduBot.Api.Modules.School.Entities.Student", b =>
+                {
+                    b.HasOne("EduBot.Api.Modules.School.Entities.Classroom", "Classroom")
+                        .WithMany("Students")
+                        .HasForeignKey("ClassroomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Classroom");
+                });
+
             modelBuilder.Entity("EduBot.Api.Modules.Sessions.Entities.Session", b =>
                 {
+                    b.HasOne("EduBot.Api.Modules.School.Entities.Classroom", null)
+                        .WithMany()
+                        .HasForeignKey("ClassroomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("EduBot.Api.Modules.Curriculum.Entities.Lesson", null)
                         .WithMany()
                         .HasForeignKey("LessonId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -359,7 +511,22 @@ namespace EduBot.Api.Migrations
 
             modelBuilder.Entity("EduBot.Api.Modules.Curriculum.Entities.Lesson", b =>
                 {
-                    b.Navigation("Chunks");
+                    b.Navigation("LessonPages");
+                });
+
+            modelBuilder.Entity("EduBot.Api.Modules.Curriculum.Entities.LessonPage", b =>
+                {
+                    b.Navigation("LessonChunks");
+                });
+
+            modelBuilder.Entity("EduBot.Api.Modules.Curriculum.Entities.Subject", b =>
+                {
+                    b.Navigation("Lessons");
+                });
+
+            modelBuilder.Entity("EduBot.Api.Modules.School.Entities.Classroom", b =>
+                {
+                    b.Navigation("Students");
                 });
 #pragma warning restore 612, 618
         }
