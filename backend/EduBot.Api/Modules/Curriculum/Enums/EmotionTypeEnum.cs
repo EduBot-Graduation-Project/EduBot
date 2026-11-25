@@ -1,6 +1,6 @@
 namespace EduBot.Api.Modules.Curriculum.Enums;
 
-public enum EmotionType
+public enum EmotionTypeEnum
 {
     Neutral,
     Curiosity,

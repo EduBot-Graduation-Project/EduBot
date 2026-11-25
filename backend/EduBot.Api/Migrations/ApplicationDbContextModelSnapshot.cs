@@ -32,7 +32,7 @@ namespace EduBot.Api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("LessonStatus")
+                    b.Property<string>("LessonStatusEnum")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -63,11 +63,11 @@ namespace EduBot.Api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("ChunkType")
+                    b.Property<string>("ChunkTypeEnum")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("EmotionType")
+                    b.Property<string>("EmotionTypeEnum")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -122,7 +122,15 @@ namespace EduBot.Api.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<string>("GradeLevelEnum")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TermEnum")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -202,7 +210,8 @@ namespace EduBot.Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("GradeLevel")
+                    b.Property<string>("GradeLevelEnum")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -256,7 +265,7 @@ namespace EduBot.Api.Migrations
                     b.Property<Guid>("LessonId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("SessionState")
+                    b.Property<string>("SessionStateEnum")
                         .IsRequired()
                         .HasColumnType("text");
 

@@ -71,9 +71,15 @@ public class ApplicationDbContext(DbContextOptions options)
             .OnDelete(DeleteBehavior.Cascade);
 
         // 4. Store Enums as Strings
-        modelBuilder.Entity<Session>().Property(s => s.SessionState).HasConversion<string>();
-        modelBuilder.Entity<Lesson>().Property(l => l.LessonStatus).HasConversion<string>();
-        modelBuilder.Entity<LessonChunk>().Property(lc => lc.ChunkType).HasConversion<string>();
-        modelBuilder.Entity<LessonChunk>().Property(lc => lc.EmotionType).HasConversion<string>();
+        modelBuilder.Entity<Session>().Property(s => s.SessionStateEnum).HasConversion<string>();
+        modelBuilder.Entity<Lesson>().Property(l => l.LessonStatusEnum).HasConversion<string>();
+        modelBuilder.Entity<LessonChunk>().Property(lc => lc.ChunkTypeEnum).HasConversion<string>();
+        modelBuilder
+            .Entity<LessonChunk>()
+            .Property(lc => lc.EmotionTypeEnum)
+            .HasConversion<string>();
+        modelBuilder.Entity<Classroom>().Property(c => c.GradeLevelEnum).HasConversion<string>();
+        modelBuilder.Entity<Subject>().Property(s => s.GradeLevelEnum).HasConversion<string>();
+        modelBuilder.Entity<Subject>().Property(s => s.TermEnum).HasConversion<string>();
     }
 }

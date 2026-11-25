@@ -1,6 +1,6 @@
 namespace EduBot.Api.Modules.Sessions.Enums;
 
-public enum SessionState
+public enum SessionStateEnum
 {
     Ready,
     Explaining,

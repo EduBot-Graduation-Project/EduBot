@@ -1,4 +1,5 @@
 using EduBot.Api.Shared.Contracts;
+using EduBot.Api.Shared.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EduBot.Api.Shared.Controllers;
@@ -16,12 +17,15 @@ public abstract class BaseApiController : ControllerBase
         }
 
         // Else It Failed
-        var errorResponse = new ApiResponse(false, result.Message,
-            new Dictionary<string, string[]> { ["general"] = [result.Message ?? ""] });
+        var errorResponse = new ApiResponse(
+            false,
+            result.Message,
+            new Dictionary<string, string[]> { ["general"] = [result.Message ?? ""] }
+        );
 
         switch (result.ErrorType)
         {
-            case ResultErrorType.NotFound:
+            case ResultErrorTypeEnum.NotFound:
                 return NotFound(errorResponse);
             default:
                 return BadRequest(errorResponse);
@@ -38,12 +42,15 @@ public abstract class BaseApiController : ControllerBase
         }
 
         // Else It Failed
-        var errorResponse = new ApiResponse(false, result.Message,
-            new Dictionary<string, string[]> { ["general"] = [result.Message ?? ""] });
+        var errorResponse = new ApiResponse(
+            false,
+            result.Message,
+            new Dictionary<string, string[]> { ["general"] = [result.Message ?? ""] }
+        );
 
         switch (result.ErrorType)
         {
-            case ResultErrorType.NotFound:
+            case ResultErrorTypeEnum.NotFound:
                 return NotFound(errorResponse);
             default:
                 return BadRequest(errorResponse);

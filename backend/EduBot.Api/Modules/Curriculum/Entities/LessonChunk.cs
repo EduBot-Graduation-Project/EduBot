@@ -9,8 +9,8 @@ public class LessonChunk
     public required string SpeechText { get; set; }
     public required string BoardText { get; set; }
     public string? ImageUrl { get; set; }
-    public ChunkType ChunkType { get; set; }
-    public EmotionType EmotionType { get; set; }
+    public ChunkTypeEnum ChunkTypeEnum { get; set; }
+    public EmotionTypeEnum EmotionTypeEnum { get; set; }
 
     // Relation Between Lesson Page and Lesson Chunks 1 => M
     public Guid LessonPageId { get; set; }

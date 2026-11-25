@@ -1,6 +1,6 @@
 namespace EduBot.Api.Modules.Curriculum.Enums;
 
-public enum ChunkType
+public enum ChunkTypeEnum
 {
     Text,
     Equation,
