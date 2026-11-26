@@ -80,6 +80,22 @@ builder
         };
     });
 
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "AppPolicy",
+        policy =>
+        {
+            policy
+                .WithOrigins(builder.Configuration["AppUrl"]!)
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials();
+        }
+    );
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -110,6 +126,8 @@ using (var scope = app.Services.CreateScope())
 
 app.UseExceptionHandler();
 app.UseHttpsRedirection();
+
+app.UseCors("AppPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();
