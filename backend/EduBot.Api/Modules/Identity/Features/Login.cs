@@ -31,17 +31,11 @@ public class LoginHandler(UserManager<ApplicationUser> userManager, TokenService
     {
         // Check If User Exist
         var user = await userManager.FindByEmailAsync(request.Email);
-        if (user == null)
-        {
-            return Result<LoginResponseDto>.Failure("Invalid Email Or Password");
-        }
+        if (user == null) return Result<LoginResponseDto>.Failure("Invalid Email Or Password");
 
         // Check Password
-        var IsPasswordCorrect = await userManager.CheckPasswordAsync(user, request.Password);
-        if (!IsPasswordCorrect)
-        {
-            return Result<LoginResponseDto>.Failure("Invalid Email Or Password");
-        }
+        var isPasswordCorrect = await userManager.CheckPasswordAsync(user, request.Password);
+        if (!isPasswordCorrect) return Result<LoginResponseDto>.Failure("Invalid Email Or Password");
 
         // Get User Roles
         var roles = await userManager.GetRolesAsync(user);
@@ -49,8 +43,8 @@ public class LoginHandler(UserManager<ApplicationUser> userManager, TokenService
         // Create All Token Claims
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Email, user.Email ?? ""),
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Email, user.Email ?? "")
         };
 
         claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
