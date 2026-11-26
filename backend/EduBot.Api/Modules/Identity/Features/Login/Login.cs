@@ -2,10 +2,24 @@ using System.Security.Claims;
 using EduBot.Api.Modules.Identity.Entities;
 using EduBot.Api.Modules.Identity.Services;
 using EduBot.Api.Shared.Contracts;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
-namespace EduBot.Api.Modules.Identity.Features.Login;
+namespace EduBot.Api.Modules.Identity.Features;
+
+public record LoginCommand(string Email, string Password) : IRequest<Result<LoginResponseDto>>;
+
+public record LoginResponseDto(string Token);
+
+public class LoginCommandValidator : AbstractValidator<LoginCommand>
+{
+    public LoginCommandValidator()
+    {
+        RuleFor(prop => prop.Email).NotEmpty().EmailAddress();
+        RuleFor(prop => prop.Password).NotEmpty();
+    }
+}
 
 public class LoginHandler(UserManager<ApplicationUser> userManager, TokenService tokenService)
     : IRequestHandler<LoginCommand, Result<LoginResponseDto>>

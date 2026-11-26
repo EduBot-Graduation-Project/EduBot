@@ -1,4 +1,4 @@
-using EduBot.Api.Modules.Identity.Features.Login;
+using EduBot.Api.Modules.Identity.Features;
 using EduBot.Api.Shared.Contracts;
 using EduBot.Api.Shared.Controllers;
 using MediatR;
