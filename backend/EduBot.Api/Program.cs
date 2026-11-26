@@ -1,4 +1,6 @@
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using EduBot.Api.Infrastructure;
 using EduBot.Api.Modules.Identity.Entities;
 using EduBot.Api.Modules.Identity.Services;
@@ -13,15 +15,24 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOpenApi();
-builder.Services.AddControllers();
-builder.Services.AddMediatR(cfg =>
+builder
+    .Services.AddOpenApi()
+    .ConfigureHttpJsonOptions(options =>
     {
-        cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly
-        );
-        cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
-    }
-);
+        options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
+
+builder
+    .Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly);
+    cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+});
 
 // Validation
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
@@ -65,7 +76,7 @@ builder
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(builder.Configuration["JWT:SecretKey"]!)
-            )
+            ),
         };
     });
 
