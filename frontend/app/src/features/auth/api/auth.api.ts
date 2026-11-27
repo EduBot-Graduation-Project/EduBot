@@ -1,9 +1,6 @@
-import { apiClient } from '@/lib/api-client';
+import { apiClient } from '@/shared/lib/api-client';
 import type { LoginInput } from '../schemas/loginSchema';
-
-export interface LoginResponse {
-  token: string;
-}
+import type { LoginResponse } from '../types/auth.types';
 
 export const authApi = {
   login: (credentials: LoginInput) =>

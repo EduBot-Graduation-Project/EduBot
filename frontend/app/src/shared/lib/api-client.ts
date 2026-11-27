@@ -1,15 +1,29 @@
 import axios, { AxiosError, type AxiosRequestConfig } from 'axios';
-import type { ApiResponse } from '@/interfaces/api';
+import type { ApiResponse } from '@/shared/types/api';
+import { TOKEN_KEY } from '@/shared/lib/auth';
+
+export class ApiError extends Error {
+  readonly status?: number;
+  readonly errors?: Record<string, string[]> | null;
+
+  constructor(
+    message: string,
+    status?: number,
+    errors?: Record<string, string[]> | null,
+  ) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+    this.errors = errors;
+  }
+}
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5019/api',
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
 
 axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('edubot_token');
+  const token = localStorage.getItem(TOKEN_KEY);
   if (token && config.headers) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -22,7 +36,13 @@ axiosInstance.interceptors.response.use(
 
     if (payload && typeof payload.isSuccess === 'boolean') {
       if (!payload.isSuccess) {
-        return Promise.reject(new Error(payload.message || 'Request failed'));
+        return Promise.reject(
+          new ApiError(
+            payload.message || 'Request failed',
+            response.status,
+            payload.errors,
+          ),
+        );
       }
       return payload.data as never;
     }
@@ -31,13 +51,19 @@ axiosInstance.interceptors.response.use(
   },
   (error: AxiosError<ApiResponse<unknown>>) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('edubot_token');
+      localStorage.removeItem(TOKEN_KEY);
     }
 
     const message =
       error.response?.data?.message || error.message || 'Network error';
 
-    return Promise.reject(new Error(message));
+    return Promise.reject(
+      new ApiError(
+        message,
+        error.response?.status,
+        error.response?.data?.errors ?? null,
+      ),
+    );
   }
 );
 

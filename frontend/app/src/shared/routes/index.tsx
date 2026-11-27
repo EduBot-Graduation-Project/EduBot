@@ -1,16 +1,18 @@
 import { createBrowserRouter, Navigate } from 'react-router';
 
 import LoginPage from '@/features/auth/pages/LoginPage';
-
-import AdminLayout from '../layouts/AdminLayout';
-import StudentLayout from '../layouts/StudentLayout';
-import { RoleGuard } from '@/components/auth/RoleGuard';
-import { getCurrentUser, getDefaultRouteByRole } from '@/lib/auth';
-
-import Overview from '../features/admin/pages/Overview';
-import Classrooms from '../features/admin/pages/Classrooms';
-import NotFoundPage from '@/pages/NotFoundPage';
-import OperatorLayout from '../layouts/OperatorLayout';
+import OverviewPage from '@/features/dashboard/pages/OverviewPage';
+import ClassroomsPage from '@/features/classrooms/pages/ClassroomsPage';
+import {
+  adminNavigationItems,
+  operatorNavigationItems,
+  studentNavigationItems,
+} from '@/shared/config/navigation';
+import DashboardLayout from '@/shared/layouts/DashboardLayout';
+import NotFoundPage from '@/shared/pages/NotFoundPage';
+import { getCurrentUser, getDefaultRouteByRole } from '@/shared/lib/auth';
+import { GuestGuard } from '@/shared/routes/GuestGuard';
+import { RoleGuard } from '@/shared/routes/RoleGuard';
 
 // eslint-disable-next-line react-refresh/only-export-components
 function RootRedirect() {
@@ -26,19 +28,21 @@ export const router = createBrowserRouter([
     errorElement: <NotFoundPage />,
   },
   {
-    path: '/login',
-    element: <LoginPage />,
+    element: <GuestGuard />,
+    children: [{ path: '/login', element: <LoginPage /> }],
   },
   {
     element: <RoleGuard allowedRoles={['Admin']} />,
     children: [
       {
         path: '/admin',
-        element: <AdminLayout />,
+        element: (
+          <DashboardLayout items={adminNavigationItems} roleLabel="Admin Portal" />
+        ),
         children: [
           { index: true, element: <Navigate to="overview" replace /> },
-          { path: 'overview', element: <Overview /> },
-          { path: 'classrooms', element: <Classrooms /> },
+          { path: 'overview', element: <OverviewPage /> },
+          { path: 'classrooms', element: <ClassroomsPage /> },
         ],
       },
     ],
@@ -48,7 +52,12 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '/operator',
-        element: <OperatorLayout />,
+        element: (
+          <DashboardLayout
+            items={operatorNavigationItems}
+            roleLabel="Operator Portal"
+          />
+        ),
         children: [
           { index: true, element: <Navigate to="dashboard" replace /> },
           { path: 'dashboard', element: <div>Operator Dashboard</div> },
@@ -63,7 +72,12 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '/student',
-        element: <StudentLayout />,
+        element: (
+          <DashboardLayout
+            items={studentNavigationItems}
+            roleLabel="Student Portal"
+          />
+        ),
         children: [
           { index: true, element: <Navigate to="dashboard" replace /> },
           { path: 'dashboard', element: <div>Student Dashboard</div> },

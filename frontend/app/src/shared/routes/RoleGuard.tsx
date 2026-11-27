@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router';
-import type { UserRole } from '@/interfaces/domain';
-import { getCurrentUser, getDefaultRouteByRole } from '@/lib/auth';
+import type { UserRole } from '@/shared/types/domain';
+import { getCurrentUser, getDefaultRouteByRole } from '@/shared/lib/auth';
 
 interface RoleGuardProps {
   allowedRoles: UserRole[];
