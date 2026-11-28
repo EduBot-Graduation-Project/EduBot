@@ -13,6 +13,7 @@ import NotFoundPage from '@/shared/pages/NotFoundPage';
 import { getCurrentUser, getDefaultRouteByRole } from '@/shared/lib/auth';
 import { GuestGuard } from '@/shared/routes/GuestGuard';
 import { RoleGuard } from '@/shared/routes/RoleGuard';
+import StudentsPage from '@/features/students/pages/StudentPage';
 
 // eslint-disable-next-line react-refresh/only-export-components
 function RootRedirect() {
@@ -43,6 +44,7 @@ export const router = createBrowserRouter([
           { index: true, element: <Navigate to="overview" replace /> },
           { path: 'overview', element: <OverviewPage /> },
           { path: 'classrooms', element: <ClassroomsPage /> },
+          { path: 'students', element: <StudentsPage /> },
         ],
       },
     ],

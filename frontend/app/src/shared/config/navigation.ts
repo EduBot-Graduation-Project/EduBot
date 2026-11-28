@@ -1,9 +1,10 @@
-import { BookOpen, FileText, LayoutDashboard, Presentation, School } from 'lucide-react';
+import { BookOpen, FileText, LayoutDashboard, Presentation, School , GraduationCap} from 'lucide-react';
 import type { NavItem } from '@/shared/components/AppSidebar';
 
 export const adminNavigationItems: NavItem[] = [
   { title: 'Overview', url: '/admin/overview', icon: LayoutDashboard },
   { title: 'Classrooms', url: '/admin/classrooms', icon: School },
+  { title: 'Students', url: '/admin/students', icon: GraduationCap },
 ];
 
 export const operatorNavigationItems: NavItem[] = [
